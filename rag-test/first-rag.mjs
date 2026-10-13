@@ -68,7 +68,7 @@ for (const q of questions) {
 
     scoredResults.forEach(([doc, scoreRes], idx) => {
         const score = scoreRes ? scoreRes : null;
-        const similarity = score ? (1 - score).toFixed(4) : 'N/A'
+        const similarity = score ? score.toFixed(4) : 'N/A'
         console.log(chalk.red(`相似度：${similarity}`));
 
     });
