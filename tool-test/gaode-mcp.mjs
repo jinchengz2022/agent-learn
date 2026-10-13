@@ -44,56 +44,46 @@ const mcpClient = new MultiServerMCPClient({
     },
 });
 
+const tools = await mcpClient.getTools();
 
-const listResource = await mcpClient.listResources();
+const modelWithTools = model.bindTools(tools);
 
-listResource.forEach(async (resource) => {
-    const content = await mcpClient.readResource(resource.serverName, resource.uri);
-    console.log(chalk.redBright(`\n资源内容: ${content}`));
-});
+const runAgentWithTools = async (query, maxIterations = 30) => {
+    const messages = [new HumanMessage(query)];
 
+    for (let i = 0; i < maxIterations; i++) {
+        console.log(chalk.green('ai loading ...'));
 
+        const response = await modelWithTools.invoke(messages);
 
-// const tools = await mcpClient.getTools();
+        messages.push(response);
 
-// const modelWithTools = model.bindTools(tools);
+        if (!response.tool_calls || response.tool_calls.length === 0) {
+            return response.content;
+        }
 
-// const runAgentWithTools = async (query, maxIterations = 30) => {
-//     const messages = [new HumanMessage(query)];
+        for (const toolCall of response.tool_calls) {
+            const foundToolCall = tools.find(tool => tool.name === toolCall.name);
 
-//     for (let i = 0; i < maxIterations; i++) {
-//         console.log(chalk.green('ai loading ...'));
+            if (foundToolCall) {
+                const toolRes = await foundToolCall.invoke(toolCall.args);
+                messages.push(new ToolMessage({
+                    content: toolRes,
+                    toolCallId: toolCall.id,
+                }));
+            }
+        }
 
-//         const response = await modelWithTools.invoke(messages);
+    }
 
-//         messages.push(response);
+    return messages[messages.length - 1].content;
+}
 
-//         if (!response.tool_calls || response.tool_calls.length === 0) {
-//             return response.content;
-//         }
-
-//         for (const toolCall of response.tool_calls) {
-//             const foundToolCall = tools.find(tool => tool.name === toolCall.name);
-
-//             if (foundToolCall) {
-//                 const toolRes = await foundToolCall.invoke(toolCall.args);
-//                 messages.push(new ToolMessage({
-//                     content: toolRes,
-//                     toolCallId: toolCall.id,
-//                 }));
-//             }
-//         }
-
-//     }
-
-//     return messages[messages.length - 1].content;
-// }
-
-// try {
-//     const query = "请告诉我北京故宫附近的5家酒店地址并将该信息写入到 /Users/jincheng/Desktop/agent-learn/tool-test/hotel.txt 文件中，最后使用浏览器打开展示该文件信息";
-//     const result = await runAgentWithTools(query);
-//     console.log(chalk.yellowBright(`\n最终结果: ${result}`));
-// } catch (error) {
-//     console.error(chalk.redBright(`\n运行出错: ${error.message}`));
-// }
+try {
+    const query = "请告诉我北京故宫附近的5家酒店地址并将该信息写入到 /Users/jincheng/Desktop/agent-learn/tool-test/hotel.txt 文件中，最后使用浏览器打开展示该文件信息";
+    const result = await runAgentWithTools(query);
+    console.log(chalk.yellowBright(`\n最终结果: ${result}`));
+} catch (error) {
+    console.error(chalk.redBright(`\n运行出错: ${error.message}`));
+}
 mcpClient.close();
