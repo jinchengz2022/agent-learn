@@ -58,6 +58,7 @@ const documents = [
 
 const vectorStore = await MemoryVectorStore.fromDocuments(documents, embeddings);
 
+// 看是否需要，这里可以限制查询最相关的信息的数量
 // const retriever = vectorStore.asRetriever({ k: 3 });
 
 const questions = ['Tom 的性格特征？']
