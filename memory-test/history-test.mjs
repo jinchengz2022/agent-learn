@@ -7,7 +7,7 @@ const llm = new ChatOpenAI({
   apiKey:
     process.env.API_KEY ||
     "sk-ws-H.PLYPHDH.pInG.MEYCIQDaYqoWJ7impY3WpMy6jaPg5s5Uuh1RMUKtPtaCnWpoLAIhALi8nVY7K4sR7_0SDZg0dpufRYcnR9ImPT9rKsHjfD4Y",
-  model: process.env.MODEL_NAME || "deepseek-v4.1-flash",
+  model: process.env.MODEL_NAME || "qwen3.8-flash",
   configuration: {
     baseURL:
       process.env.BASE_URL ||

@@ -20,6 +20,9 @@ importers:
       dotenv:
         specifier: ^18.0.8
         version: 18.0.8
+      js-tiktoken:
+        specifier: ^1.0.21
+        version: 1.0.21
       langchain:
         specifier: ^1.5.18
         version: 1.5.18(@langchain/core@1.2.20(openai@7.39.0(ws@8.22.0)(zod@4.6.7))(ws@8.22.0))(openai@7.39.0(ws@8.22.0)(zod@4.6.7))(ws@8.22.0)
