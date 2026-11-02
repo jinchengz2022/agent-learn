@@ -1,3 +1,5 @@
 
 # NestJS Observe key pair
 .env
+dist/
+node_modules/
