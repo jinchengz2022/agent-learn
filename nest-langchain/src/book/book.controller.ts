@@ -1,8 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { BookService } from './book.service.js';
 import { CreateBookDto } from './dto/create-book.dto.js';
 import { UpdateBookDto } from './dto/update-book.dto.js';
-import { ChatOpenAI } from '@langchain/openai'
+import { ChatOpenAI } from '@langchain/openai';
 
 @Controller('book')
 export class BookController {
@@ -11,11 +19,6 @@ export class BookController {
   @Post()
   create(@Body() createBookDto: CreateBookDto) {
     return this.bookService.create(createBookDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.bookService.findAll();
   }
 
   @Get(':id')

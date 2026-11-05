@@ -15,7 +15,7 @@ export class AiService {
   constructor(@Inject('CHAT_MODEL') llm: ChatOpenAI) {
     const prompt = PromptTemplate.fromTemplate('请回答以下问题：\n\n {query}');
 
-    this.chain = prompt.pipe(llm).pipe(new StringOutputParser());
+    // this.chain = prompt.pipe(llm).pipe(new StringOutputParser());
   }
 
   runChain(query: string) {
